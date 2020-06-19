@@ -37,15 +37,15 @@ def task2(prob, move1, move2):
     return steps
 
 def task3(steps, p1=True, p2=True):
-    orientation_prob = [1/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8]
+    orientation_prob = [1/4, 1/4, 1/4, 1/4]
     step_prob = [1/3, 1/3, 1/3]
-    orientation = [0, 45, 90, 135, 180, 225, 270, 315]
+    orientation = [0, 90, 180, 270]
     step_size = [0, 0.5, 1]
     coords = []
     old_x = 0
     old_y = 0
     if not p1:
-        orientation_prob = [0.1, 0.1, 0.1, 0.2, 0.1, 0.1, 0.2, 0.1]
+        orientation_prob = [0.2, 0.4, 0.1, 0.3]
     if not p2:
         step_prob = [0.2, 0.3, 0.5]
     for _ in range(steps):
@@ -178,11 +178,11 @@ def task8():
         old_x1, old_y1 = helper(old_x1, old_y1, coord1)
         old_x2, old_y2 = helper(old_x2, old_y2, coord2)
         step+=1
-    return coord1, coord2
+    return coord1, coord2, step
 
 def helper(old_x, old_y, coords):
     angle = math.radians(np.random.uniform(0, (360)))
-    step = np.random.uniform(0,50)
+    step = np.random.uniform(0,1)
     new_x = old_x + step * math.cos(angle)
     new_y = old_y + step * math.sin(angle)
     dist_from_origin = math.sqrt((new_y)**2 + (new_x)**2)
@@ -237,8 +237,8 @@ def setup(func,steps, p1=True, p2=True):
     circle = plt.Circle((0,0), 100, color='blue', fill=False)
     ax.add_artist(circle)
     if func == "task8":
-        coord1, coord2 = task8()
-        return coord1, coord2, fig, ax
+        coord1, coord2, steps = task8()
+        return coord1, coord2, steps, fig, ax
     elif func == "task3":
         coords = task3(steps, p1, p2)
     elif func == "task5":
@@ -271,8 +271,8 @@ def animate(i):
 # mean = display("task2")
 # print(mean)
 
-# # Task 3 
-# coords, fig, ax = setup("task3", 2000, True, True)
+# Task 3 
+# coords, fig, ax = setup("task3", 10000, True, True)
 # xdata, ydata = [], []
 # ln, = plt.plot(xdata, ydata, color='red')
 # ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coords)-1, num=len(coords)), interval=20,
@@ -294,9 +294,8 @@ def animate(i):
 # plt.show()
 # anim.save('random_walk.gif',writer='imagemagick') 
 
-
-# Task 7
-# coords, fig, ax = setup("task7", 2000, True)
+# # Task 7
+# coords, fig, ax = setup("task7", 10000, True)
 # xdata, ydata = [], []
 # ln, = plt.plot(xdata, ydata, color='red')
 # ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coords)-1, num=len(coords)), interval=20,
@@ -311,12 +310,19 @@ def animate(i):
 # ax = fig.gca()
 # circle = plt.Circle((0,0), 100, color='blue', fill=False)
 # ax.add_artist(circle)
-# coord1, coord2= task8()
+# lst = []
+# for i in range(10000):
+#     coord1, coord2, steps = task8()
+#     task.append(steps)
+
+# avg = sum(steps)/10000
+
+# coord1, coord2, steps = task8()
+
 # x1data, y1data = [], []
 # x2data, y2data = [], []
 # ln, = plt.plot(x1data, y1data, color='purple')
 # ln2, = plt.plot(x2data, y2data, color='red')
-
 
 # # initialization function 
 # def init(): 
@@ -327,7 +333,6 @@ def animate(i):
 #     ln.set_data([], []) 
 #     ln2.set_data([], [])
 #     return ln,ln2,
-
 
 # # animation function 
 # def animate(i):
@@ -340,21 +345,10 @@ def animate(i):
 #     return ln,ln2,
 
 
-
 # # call the animator
 # ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coord1)-1, num=len(coord1)), interval=20,
 #                         init_func=init, blit=True, repeat=False) 
 # ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coord2)-1, num=len(coord2)), interval=20,
 #                         init_func=init, blit=True, repeat=False)
-plt.show()
-
-
-
-
-
-
-
-
-# task1: -0.086
-# task2: 197.358
-# task4: 0.07065437625340738
+# plt.show()
+# # ani.save('task8.gif', writer='imagemagick', fps=60)
