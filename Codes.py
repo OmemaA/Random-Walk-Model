@@ -1,5 +1,4 @@
 import random
-import turtle
 import numpy as np
 import math
 from sympy import symbols, Eq, solve
@@ -78,6 +77,7 @@ def task3(steps, p1=True, p2=True):
         old_y = new_y
     return coords
 
+
 def task4(steps, prob, move):
     x = 0
     if not move: 
@@ -94,39 +94,35 @@ def task5(steps):
     old_x = 0
     old_y = 0
     for _ in range(steps):
-        angle = np.random.uniform(0,(2*math.pi))
+        angle = math.radians(np.random.uniform(0, (360)))
         step = np.random.uniform(0,1)
-        new_x = old_x + step* math.cos(angle)
-        new_y = old_y + step* math.sin(angle)
+        print(angle, step)
+        new_x = old_x + step * math.cos(angle)
+        new_y = old_y + step * math.sin(angle)
         dist_from_origin = math.sqrt((new_y)**2 + (new_x)**2)
-        if dist_from_origin <=100:
-            coords.append((round(new_x),round(new_y)))
+        if dist_from_origin <= 100:
+            coords.append((new_x, new_y))
         else:
-            print("X:", new_x, '\n', "Y:", new_y)
-            reflected_angle = 270 +  angle
-            m = (new_y-old_y)/(new_x-old_x)
-            x, y = symbols('x y')
-            line_eqn = Eq(m*(x-new_x)  + new_y - y, 0)
-            print("Line Equation:", line_eqn)
-            circle_eqn = Eq(x**2 + y**2 - 100**2, 0)
-            print("Circle Equation:", circle_eqn)
-            x1, y1 = solve((line_eqn, circle_eqn), (x,y))[0]
-            x2, y2 = solve((line_eqn, circle_eqn), (x,y))[1]
-            dist1 = math.sqrt((y1 - new_y)**2 + (x1 - new_x)**2)
-            dist2 = math.sqrt((y2 - new_y)**2 + (x2 - new_x)**2)
-            if dist1>dist2:
-                x, y = x2, y2
-            else:
-                x, y = x1, y1
-            #coords.append((round(x),round(y)))
-            dist_rem = step-math.sqrt((new_y)**2 + (new_x)**2)
+            reflected_angle = (3/2)*math.pi + angle
+            dist1 = math.sqrt((new_x)**2+(new_y)**2)
+            dist2 = math.sqrt((old_x)**2+(old_y)**2)
+            dist_rem = (dist1-dist2)-(100-dist2)
             new_x = old_x+dist_rem*math.cos(reflected_angle)
             new_y = old_y+dist_rem*math.sin(reflected_angle)
-            coords.append((round(new_x),round(new_y)))
+            bound = math.sqrt((new_x)**2+(new_y)**2)
+            while bound >= 100:
+                reflected_angle = math.pi-reflected_angle
+                dist1 = math.sqrt((new_x)**2+(new_y)**2)
+                dist2 = math.sqrt((old_x)**2+(old_y)**2)
+                dist_rem = (dist1-dist2)-(100-dist2)
+                new_x = old_x+dist_rem*math.cos(reflected_angle)
+                new_y = old_y+dist_rem*math.sin(reflected_angle)
+                bound = math.sqrt((new_x)**2+(new_y)**2)
+            coords.append((new_x, new_y))
         old_x = new_x
         old_y = new_y
     return coords
-
+    
 def task7(steps, p1=True):
     step_prob = [1/3, 1/3, 1/3]
     step_size = [0, 0.5, 1]
@@ -136,83 +132,79 @@ def task7(steps, p1=True):
     if not p1:
         step_prob = [0.2, 0.3, 0.5]
     for _ in range(steps):
-        angle = np.random.uniform(0, (math.pi*2))
+        angle = math.radians(np.random.uniform(0, (360)))
         step = np.random.choice(step_size, p=step_prob)
-        new_x = old_x + step* math.cos(angle)
-        new_y = old_y + step* math.sin(angle)
+        new_x = old_x + step * math.cos(angle)
+        new_y = old_y + step * math.sin(angle)
         dist_from_origin = math.sqrt((new_y)**2 + (new_x)**2)
-        if dist_from_origin <=100:
-            coords.append((round(new_x),round(new_y)))
+        if dist_from_origin <= 100:
+            coords.append((new_x, new_y))
         else:
-            print("X:", new_x, '\n', "Y:", new_y)
-            reflected_angle = 270 +  angle
-            m = (new_y-old_y)/(new_x-old_x)
-            x, y = symbols('x y')
-            line_eqn = Eq(m*(x-new_x)  + new_y - y, 0)
-            print("Line Equation:", line_eqn)
-            circle_eqn = Eq(x**2 + y**2 - 100**2, 0)
-            print("Circle Equation:", circle_eqn)
-            x1, y1 = solve((line_eqn, circle_eqn), (x,y))[0]
-            x2, y2 = solve((line_eqn, circle_eqn), (x,y))[1]
-            dist1 = math.sqrt((y1 - new_y)**2 + (x1 - new_x)**2)
-            dist2 = math.sqrt((y2 - new_y)**2 + (x2 - new_x)**2)
-            if dist1>dist2:
-                x, y = x2, y2
-            else:
-                x, y = x1, y1
-            #coords.append((round(x),round(y)))
-            dist_rem = step-math.sqrt((new_y)**2 + (new_x)**2)
+            reflected_angle = (3/2)*math.pi + angle
+            dist1 = math.sqrt((new_x)**2+(new_y)**2)
+            dist2 = math.sqrt((old_x)**2+(old_y)**2)
+            dist_rem = (dist1-dist2)-(100-dist2)
             new_x = old_x+dist_rem*math.cos(reflected_angle)
             new_y = old_y+dist_rem*math.sin(reflected_angle)
-            coords.append((round(new_x),round(new_y)))
+            bound = math.sqrt((new_x)**2+(new_y)**2)
+            while bound >= 100:
+                reflected_angle = math.pi-reflected_angle
+                dist1 = math.sqrt((new_x)**2+(new_y)**2)
+                dist2 = math.sqrt((old_x)**2+(old_y)**2)
+                dist_rem = (dist1-dist2)-(100-dist2)
+                new_x = old_x+dist_rem*math.cos(reflected_angle)
+                new_y = old_y+dist_rem*math.sin(reflected_angle)
+                bound = math.sqrt((new_x)**2+(new_y)**2)
+            coords.append((new_x, new_y))
         old_x = new_x
         old_y = new_y
     return coords
 
 def task8():
-    old_x1 = random.randint(0,90)
-    old_y1 = math.sqrt(100**2 - old_x1**2)
+    angle1, angle2 = np.random.uniform(high=360.0, size=2)
+    r1, r2 = np.random.uniform(high=100.0, size=2)
 
-    old_x2 = random.randint(0,100)
-    old_y2 = math.sqrt(100**2 - old_x2**2)
+    old_x1 = r1* math.cos(math.radians(angle1))
+    old_y1 = r1* math.sin(math.radians(angle1))
+    old_x2 = r2* math.cos(math.radians(angle2))
+    old_y2 = r2* math.sin(math.radians(angle2))
 
     dist = math.sqrt((old_y1-old_y2)**2 + (old_x1-old_x2)**2)
     step = 0
     coord1=[]
     coord2 =[]
-    while dist!=1:
+    while dist >=1:
+        dist = math.sqrt((old_y1-old_y2)**2 + (old_x1-old_x2)**2)
         old_x1, old_y1 = helper(old_x1, old_y1, coord1)
         old_x2, old_y2 = helper(old_x2, old_y2, coord2)
         step+=1
     return coord1, coord2
 
 def helper(old_x, old_y, coords):
-    angle = np.random.uniform(0,(2*math.pi))
-    step = np.random.uniform(0,1)
-    new_x = old_x + step* math.cos(angle)
-    new_y = old_y + step* math.sin(angle)
+    angle = math.radians(np.random.uniform(0, (360)))
+    step = np.random.uniform(0,50)
+    new_x = old_x + step * math.cos(angle)
+    new_y = old_y + step * math.sin(angle)
     dist_from_origin = math.sqrt((new_y)**2 + (new_x)**2)
-    if dist_from_origin <=100:
-        coords.append((round(new_x),round(new_y)))
+    if dist_from_origin <= 100:
+        coords.append((new_x, new_y))
     else:
-        reflected_angle = 270 +  angle
-        m = (new_y-old_y)/(new_x-old_x)
-        x, y = symbols('x y')
-        line_eqn = Eq(m*(x-new_x)  + new_y - y, 0)
-        circle_eqn = Eq(x**2 + y**2 - 100**2, 0)
-        x1, y1 = solve((line_eqn, circle_eqn), (x,y))[0]
-        x2, y2 = solve((line_eqn, circle_eqn), (x,y))[1]
-        dist1 = math.sqrt((y1 - new_y)**2 + (x1 - new_x)**2)
-        dist2 = math.sqrt((y2 - new_y)**2 + (x2 - new_x)**2)
-        if dist1>dist2:
-            x, y = x2, y2
-        else:
-            x, y = x1, y1
-        #coords.append((round(x),round(y)))
-        dist_rem = step-math.sqrt((new_y)**2 + (new_x)**2)
+        reflected_angle = (3/2)*math.pi + angle
+        dist1 = math.sqrt((new_x)**2+(new_y)**2)
+        dist2 = math.sqrt((old_x)**2+(old_y)**2)
+        dist_rem = (dist1-dist2)-(100-dist2)
         new_x = old_x+dist_rem*math.cos(reflected_angle)
         new_y = old_y+dist_rem*math.sin(reflected_angle)
-        coords.append((round(new_x),round(new_y)))
+        bound = math.sqrt((new_x)**2+(new_y)**2)
+        while bound >= 100:
+            reflected_angle = math.pi-reflected_angle
+            dist1 = math.sqrt((new_x)**2+(new_y)**2)
+            dist2 = math.sqrt((old_x)**2+(old_y)**2)
+            dist_rem = (dist1-dist2)-(100-dist2)
+            new_x = old_x+dist_rem*math.cos(reflected_angle)
+            new_y = old_y+dist_rem*math.sin(reflected_angle)
+            bound = math.sqrt((new_x)**2+(new_y)**2)
+        coords.append((new_x, new_y))
     return new_x, new_y
 
 # displaying graphs
@@ -232,6 +224,7 @@ def display(func):
     plt.xlabel('Distance from starting point')
     plt.ylabel(' Frequency')
     plt.grid(True)
+    plt.savefig(func + ".png")
     plt.show()
     return expected
 
@@ -243,15 +236,15 @@ def setup(func,steps, p1=True, p2=True):
     ax = fig.gca()
     circle = plt.Circle((0,0), 100, color='blue', fill=False)
     ax.add_artist(circle)
-    # plt.savefig("blah.png")
-    if func == "task3":
+    if func == "task8":
+        coord1, coord2 = task8()
+        return coord1, coord2, fig, ax
+    elif func == "task3":
         coords = task3(steps, p1, p2)
     elif func == "task5":
         coords = task5(steps)
     elif func == "task7":
         coords = task7(steps, p1)
-    # elif func == "task8":
-        # coords = task8(steps)
     return coords, fig, ax
 
 # initialization function 
@@ -285,7 +278,7 @@ def animate(i):
 # ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coords)-1, num=len(coords)), interval=20,
 #                         init_func=init, blit=True, repeat=False) 
 # plt.show()
-#anim.save('random_walk.gif',writer='imagemagick') 
+# ani.save('task3.gif',writer='imagemagick')
 
 
 # # Task 4
@@ -293,17 +286,17 @@ def animate(i):
 # print(mean)
 
 # # Task 5
-# coords, fig, ax = setup("task3", 2000)
+# coords, fig, ax = setup("task5", 2000)
 # xdata, ydata = [], []
 # ln, = plt.plot(xdata, ydata, color='red')
 # ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coords)-1, num=len(coords)), interval=20,
 #                         init_func=init, blit=True, repeat=False) 
 # plt.show()
-#anim.save('random_walk.gif',writer='imagemagick') 
+# anim.save('random_walk.gif',writer='imagemagick') 
 
 
-# # Task 7
-# coords, fig, ax = setup("task3", 2000, True)
+# Task 7
+# coords, fig, ax = setup("task7", 2000, True)
 # xdata, ydata = [], []
 # ln, = plt.plot(xdata, ydata, color='red')
 # ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coords)-1, num=len(coords)), interval=20,
@@ -313,10 +306,55 @@ def animate(i):
 
 
 # # Task 8
-# coords, fig, ax = setup("task3", 2000)
-# xdata, ydata = [], []
-# ln, = plt.plot(xdata, ydata, color='red')
-# ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coords)-1, num=len(coords)), interval=20,
+# fig, ax = plt.subplots(figsize=(6,6))
+# fig = plt.gcf()
+# ax = fig.gca()
+# circle = plt.Circle((0,0), 100, color='blue', fill=False)
+# ax.add_artist(circle)
+# coord1, coord2= task8()
+# x1data, y1data = [], []
+# x2data, y2data = [], []
+# ln, = plt.plot(x1data, y1data, color='purple')
+# ln2, = plt.plot(x2data, y2data, color='red')
+
+
+# # initialization function 
+# def init(): 
+#     # creating an empty plot/frame 
+#     ax.set_xlim((-200,200))
+#     ax.set_ylim((-200,200))
+#     # ax.set_title("Task 5")/
+#     ln.set_data([], []) 
+#     ln2.set_data([], [])
+#     return ln,ln2,
+
+
+# # animation function 
+# def animate(i):
+#     x1data.append(coord1[int(i)][0])
+#     y1data.append(coord1[int(i)][1])
+#     ln.set_data(x1data, y1data)
+#     x2data.append(coord2[int(i)][0])
+#     y2data.append(coord2[int(i)][1])
+#     ln2.set_data(x2data, y2data)
+#     return ln,ln2,
+
+
+
+# # call the animator
+# ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coord1)-1, num=len(coord1)), interval=20,
 #                         init_func=init, blit=True, repeat=False) 
-# plt.show()
-#anim.save('random_walk.gif',writer='imagemagick') 
+# ani = FuncAnimation(fig, animate, frames=np.linspace(0, len(coord2)-1, num=len(coord2)), interval=20,
+#                         init_func=init, blit=True, repeat=False)
+plt.show()
+
+
+
+
+
+
+
+
+# task1: -0.086
+# task2: 197.358
+# task4: 0.07065437625340738
