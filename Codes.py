@@ -50,39 +50,33 @@ def task3(steps, p1=True, p2=True):
     if not p2:
         step_prob = [0.2, 0.3, 0.5]
     for _ in range(steps):
-        angle = np.random.choice(orientation, p=orientation_prob)
+        angle = math.radians(np.random.choice(orientation, p=orientation_prob))
         step = np.random.choice(step_size, p=step_prob)
-        new_x = old_x + step* math.cos(angle)
-        new_y = old_y + step* math.sin(angle)
+        new_x = old_x + step * math.cos(angle)
+        new_y = old_y + step * math.sin(angle)
         dist_from_origin = math.sqrt((new_y)**2 + (new_x)**2)
-        if dist_from_origin <=100:
-            coords.append((round(new_x),round(new_y)))
+        if dist_from_origin <= 100:
+            coords.append((new_x, new_y))
         else:
-            print("X:", new_x, '\n', "Y:", new_y)
-            reflected_angle = 270 +  angle
-            m = (new_y-old_y)/(new_x-old_x)
-            x, y = symbols('x y')
-            line_eqn = Eq(m*(x-new_x)  + new_y - y, 0)
-            print("Line Equation:", line_eqn)
-            circle_eqn = Eq(x**2 + y**2 - 100**2, 0)
-            print("Circle Equation:", circle_eqn)
-            x1, y1 = solve((line_eqn, circle_eqn), (x,y))[0]
-            x2, y2 = solve((line_eqn, circle_eqn), (x,y))[1]
-            dist1 = math.sqrt((y1 - new_y)**2 + (x1 - new_x)**2)
-            dist2 = math.sqrt((y2 - new_y)**2 + (x2 - new_x)**2)
-            if dist1>dist2:
-                x, y = x2, y2
-            else:
-                x, y = x1, y1
-            #coords.append((round(x),round(y)))
-            dist_rem = step-math.sqrt((new_y)**2 + (new_x)**2)
+            reflected_angle = (3/2)*math.pi + angle
+            dist1 = math.sqrt((new_x)**2+(new_y)**2)
+            dist2 = math.sqrt((old_x)**2+(old_y)**2)
+            dist_rem = (dist1-dist2)-(100-dist2)
             new_x = old_x+dist_rem*math.cos(reflected_angle)
             new_y = old_y+dist_rem*math.sin(reflected_angle)
-            coords.append((round(new_x),round(new_y)))
+            bound = math.sqrt((new_x)**2+(new_y)**2)
+            while bound >= 100:
+                reflected_angle = math.pi-reflected_angle
+                dist1 = math.sqrt((new_x)**2+(new_y)**2)
+                dist2 = math.sqrt((old_x)**2+(old_y)**2)
+                dist_rem = (dist1-dist2)-(100-dist2)
+                new_x = old_x+dist_rem*math.cos(reflected_angle)
+                new_y = old_y+dist_rem*math.sin(reflected_angle)
+                bound = math.sqrt((new_x)**2+(new_y)**2)
+            coords.append((new_x, new_y))
         old_x = new_x
         old_y = new_y
     return coords
-
 
 def task4(steps, prob, move):
     x = 0
